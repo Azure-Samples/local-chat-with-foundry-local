@@ -1,0 +1,41 @@
+# Foundry Local on Azure Local — ModelDeployment
+# Alternate model: a larger Ministral variant for mid-range GPUs.
+#
+# When to choose this:
+#   - You have a mid-range or better GPU and want better chat quality than
+#     the default 3B.
+#
+# Apply with (after deleting the default):
+#   kubectl delete -f manifests/ministral-3-3b.yaml
+#   kubectl apply  -f manifests/ministral-large.yaml
+
+apiVersion: foundrylocal.azure.com/v1
+kind: ModelDeployment
+metadata:
+  name: ministral-large
+  namespace: foundry-local-operator
+  labels:
+    app.kubernetes.io/name: ministral-large
+    app.kubernetes.io/component: inference
+    foundry.azure.com/hardware: gpu
+spec:
+  displayName: "Ministral (larger variant, GPU)"
+  model:
+    catalog:
+      name: "mistralai-Ministral-3-8B-Instruct-2512"
+      version: "2"
+  runtime: vllm
+  workloadType: generative
+  compute: gpu
+  replicas: 1
+  port: 5000
+  resources:
+    requests:
+      cpu: "4"
+      memory: "16Gi"
+    limits:
+      cpu: "8"
+      memory: "32Gi"
+      gpu: 1
+  nodeSelector:
+    foundry/workload: gpu

@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph Laptop["Developer laptop"]
+        direction TB
+        Browser["Browser<br/>http://localhost:5173"]
+        ChatUI["Sovereign Chat<br/>npm run dev (Vite)<br/>completions mode"]
+        CorsProxy["cors-proxy/server.mjs<br/>http://localhost:5001<br/>answers CORS preflight"]
+        PF["kubectl port-forward<br/>localhost:5000 → deploy:5000"]
+        Browser --> ChatUI
+        ChatUI -- "POST /v1/chat/completions" --> CorsProxy
+        CorsProxy -- "forward verbatim" --> PF
+    end
+
+    subgraph Cluster["Kubernetes cluster (BYO, GPU node)"]
+        direction TB
+        Operator["Foundry Local extension<br/>(operator + catalog)"]
+        ModelDep["ModelDeployment CR<br/>e.g. ministral-3-3b"]
+        ModelPod["Model server pod<br/>vLLM / ONNX-GenAI<br/>:5000"]
+        Operator --> ModelDep
+        ModelDep --> ModelPod
+    end
+
+    PF -- "plain HTTP :5000" --> ModelPod

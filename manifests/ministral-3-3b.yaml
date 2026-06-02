@@ -1,0 +1,53 @@
+# Foundry Local on Azure Local — ModelDeployment
+# Default model for the quickstart: Ministral 3 3B
+#
+# Why this default?
+#   - Smallest GPU footprint in the alternates set — runs on any modern GPU
+#     (laptop-class included where present in the cluster).
+#   - Sufficient quality for demonstrating the end-to-end wiring; not tuned
+#     for production-grade chat quality.
+#
+# Apply with:
+#   kubectl apply -f manifests/ministral-3-3b.yaml
+#
+# Schema reference (foundrylocal.azure.com/v1 ModelDeployment):
+#   - spec.model.catalog.{name,version} = catalog entry from the operator
+#   - spec.runtime = "vllm" | "onnx-genai" (must match the catalog entry's
+#     framework — the operator's default if omitted is "onnx-genai", which
+#     mismatches our vllm-framework catalog entries and causes a runtime
+#     resolution error; always set this explicitly)
+#   - spec.compute = "gpu" | "cpu"
+#   - spec.workloadType = "generative" | "predictive"
+#   - spec.resources.limits.gpu = integer (operator translates to nvidia.com/gpu)
+#   - spec.port defaults to 5000
+
+apiVersion: foundrylocal.azure.com/v1
+kind: ModelDeployment
+metadata:
+  name: ministral-3-3b
+  namespace: foundry-local-operator
+  labels:
+    app.kubernetes.io/name: ministral-3-3b
+    app.kubernetes.io/component: inference
+    foundry.azure.com/hardware: gpu
+spec:
+  displayName: "Ministral 3 3B (GPU)"
+  model:
+    catalog:
+      name: "mistralai-Ministral-3-3B-Instruct-2512"
+      version: "1"
+  runtime: vllm
+  workloadType: generative
+  compute: gpu
+  replicas: 1
+  port: 5000
+  resources:
+    requests:
+      cpu: "2"
+      memory: "8Gi"
+    limits:
+      cpu: "4"
+      memory: "16Gi"
+      gpu: 1
+  nodeSelector:
+    foundry/workload: gpu

@@ -1,0 +1,35 @@
+# Node (the chat UI dev will install node_modules in the cloned repo, not here,
+# but include the pattern in case someone runs anything Node-local in this repo)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files — never commit real values
+.env
+.env.local
+*.env
+
+# Kubernetes / kubectl
+kubeconfig
+*.kubeconfig
+.kube/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build / logs / temp
+dist/
+build/
+*.log
+tmp/
+temp/
+
+# Internal / planning files (never ship to a public repo)
+CONTEXT.md
+PLAN.md
+NOTES.md

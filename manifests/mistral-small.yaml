@@ -1,0 +1,36 @@
+# Foundry Local on Azure Local — ModelDeployment
+# Alternate model: Mistral Small — solid chat quality on a large GPU.
+#
+# When to choose this:
+#   - You have a large single GPU (24–48 GB VRAM).
+
+apiVersion: foundrylocal.azure.com/v1
+kind: ModelDeployment
+metadata:
+  name: mistral-small
+  namespace: foundry-local-operator
+  labels:
+    app.kubernetes.io/name: mistral-small
+    app.kubernetes.io/component: inference
+    foundry.azure.com/hardware: gpu
+spec:
+  displayName: "Mistral Small (GPU)"
+  model:
+    catalog:
+      name: "mistralai-Mistral-Small-3.2-24B-Instruct-2506"
+      version: "2"
+  runtime: vllm
+  workloadType: generative
+  compute: gpu
+  replicas: 1
+  port: 5000
+  resources:
+    requests:
+      cpu: "8"
+      memory: "32Gi"
+    limits:
+      cpu: "16"
+      memory: "64Gi"
+      gpu: 1
+  nodeSelector:
+    foundry/workload: gpu

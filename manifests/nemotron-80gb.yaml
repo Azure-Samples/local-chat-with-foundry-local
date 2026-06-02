@@ -1,0 +1,37 @@
+# Foundry Local on Azure Local — ModelDeployment
+# Alternate model: Nemotron variant that fits in 80 GB VRAM (A100 80 GB).
+#
+# When to choose this:
+#   - You have an A100 80 GB or equivalent and want the highest-quality
+#     demo in this set.
+
+apiVersion: foundrylocal.azure.com/v1
+kind: ModelDeployment
+metadata:
+  name: nemotron-80gb
+  namespace: foundry-local-operator
+  labels:
+    app.kubernetes.io/name: nemotron-80gb
+    app.kubernetes.io/component: inference
+    foundry.azure.com/hardware: gpu
+spec:
+  displayName: "Nemotron (80 GB variant, GPU)"
+  model:
+    catalog:
+      name: "nvidia-NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
+      version: "2"
+  runtime: vllm
+  workloadType: generative
+  compute: gpu
+  replicas: 1
+  port: 5000
+  resources:
+    requests:
+      cpu: "16"
+      memory: "64Gi"
+    limits:
+      cpu: "32"
+      memory: "96Gi"
+      gpu: 1
+  nodeSelector:
+    foundry/workload: gpu

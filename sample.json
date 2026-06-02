@@ -1,0 +1,18 @@
+{
+  "name": "Foundry Local on Azure Local — Chat Quickstart",
+  "description": "End-to-end quickstart: deploy a model from the Foundry Local catalog on your Kubernetes cluster, wire it to the Sovereign Chat Experience starter, and have a working on-prem chat app in minutes.",
+  "languages": ["yaml", "javascript"],
+  "products": ["azure", "azure-ai-foundry", "azure-local", "azure-arc"],
+  "primaryTechnology": "kubernetes",
+  "tags": [
+    "ai",
+    "kubernetes",
+    "foundry-local",
+    "azure-local",
+    "getting-started",
+    "chat",
+    "on-premises",
+    "quickstart"
+  ],
+  "authors": ["Schtechel"]
+}
